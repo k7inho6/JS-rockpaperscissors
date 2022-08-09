@@ -1,3 +1,4 @@
+
 function getComputerChoice(rock, paper, scissors) {
     randomNumber = Math.floor(Math.random() * 3);
     if (randomNumber == 0) {
@@ -11,8 +12,32 @@ function getComputerChoice(rock, paper, scissors) {
     }
 }
 
+let choice = 'rock';
+let possibleChoices = ['rock', 'paper', 'scissors'];
+let pointsPlayer = 0;
+let pointsComputer = 0;
+
+function updateRock() {
+    choice = possibleChoices[0];
+    game();
+}
+function updatePaper() {
+    choice = possibleChoices[1];
+    game();
+}
+function updateScissors() {
+    choice = possibleChoices[2];
+    game();
+}
+
+let btnRock = document.querySelector('.btn');
+btnRock.addEventListener('click', updateRock);
+let btnPaper = document.querySelector('#Paper');
+btnPaper.addEventListener('click', updatePaper);
+let btnScissors = document.querySelector('#Scissors');
+btnScissors = addEventListener('click', updateScissors);
+
 function getPlayerChoice() {
-    let choice = prompt("Enter your choice: ");
     let result = choice.toLowerCase();
     return result;
 }
@@ -20,69 +45,49 @@ function getPlayerChoice() {
 function playRound(computerSelection, playerSelection) {
     computerSelection = getComputerChoice();
     playerSelection = getPlayerChoice();
+    let content = document.querySelector('.content');
     
-    if (computerSelection == playerSelection) {
-        return 'draw';
-    }
-    else if (computerSelection == 'rock') {
+    if (computerSelection == 'rock') {
         if (playerSelection == 'paper') {
-            return 'player';
+            pointsPlayer += 1;
         }
         else {
-            return 'computer';
+            pointsComputer += 1;
         }
     }
     else if (computerSelection == 'paper') {
         if (playerSelection == 'scissors') {
-            return 'player';
+            pointsPlayer += 1;
         }
         else {
-            return 'computer';
+            pointsComputer += 1;
         }
     }
     else if (computerSelection == 'scissors') {
         if (playerSelection == 'rock') {
-            return 'player';
+            pointsPlayer += 1;
         }
         else {
-            return 'computer';
+            pointsComputer += 1;
         }
     }
+    if (pointsPlayer == 5) {
+        content.innerText = `Result = player wins`;
+        pointsPlayer = 0;
+        pointsComputer = 0;
+        return;
+    }
+    if (pointsComputer == 5) {
+        content.innerText = 'Result = computer wins';
+        pointsPlayer = 0;
+        pointsComputer = 0;
+        return;
+    }
+
+    let score = `Score: Player ${pointsPlayer}, Computer ${pointsComputer}`;
+    content.innerText = score;
+    return;
 }
 
-
-function game() {
-    let playerWinCount = 0;
-    let computerWinCount = 0;
-    let result = '';
-    let finalResult = '';
-    for (let i = 1; i < 6; i++) {
-        result = playRound();
-        if (result == 'draw') {
-            console.log(`Winner of round ${i}: draw`);
-        }
-        else if (result == 'player') {
-            playerWinCount += 1
-            console.log(`Winner of round ${i}: ${result}`);
-        }
-        else if (result == 'computer') {
-            computerWinCount += 1;
-            console.log(`Winner of round ${i}: ${result}`);
-        }
-    }
-    if (playerWinCount == computerWinCount) {
-        finalResult = 'draw';
-        console.log(`Final result: ${finalResult}`);
-    }
-    else if (playerWinCount > computerWinCount) {
-        finalResult = 'player';
-        console.log(`Final result: ${finalResult} wins`);
-    }
-    else {
-        finalResult = 'computer';
-        console.log(`Final result: ${finalResult} wins`);
-    }
-    
-}
-
-game()
+const buttons = document.querySelectorAll('.btn');
+buttons.forEach(button => button.addEventListener('click', playRound));
